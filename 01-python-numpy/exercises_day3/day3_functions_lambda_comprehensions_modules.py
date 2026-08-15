@@ -101,6 +101,36 @@ print(even_number)
 
 #Comprehension
 comp_num=[12,15,32,14,11]
-comp_even=[ n for n in comp_num if n%2==0]
+comp_even=[ n for n in comp_num if n%2==0] #out [2,4,6,8]
 
 print(comp_even)
+
+#Dictionary comprehensions
+#Normal way
+List= [1,5,6,9,13,22] #declare a list
+D_square={} #create an empty dict
+for i in List: 
+    D_square[i]= i**2 
+print(D_square) #it gives out - 1:1 , 5:25 ,that number(key) and its square(value)
+
+#Dictionary comprehension
+C_List=[2,4,9,11]
+D_C_square= {
+    i:i**2
+    for i in C_List  #all calculations done inside dict
+}
+print(D_C_square)
+
+#Modules
+#A module is simply a Python file containing code that can be imported elsewhere
+import calculator #here we imported a python file that containing code
+print(calculator.c_add(10,15)) #we used return in calculator.py file, so values sended from here to calculator.py execute the program and the result will return back to here
+print(calculator.c_div(680,49)) 
+print(calculator.c_mul(8,6))
+print(calculator.c_sub(6,9))
+
+# insted import calculator also use " from import calculator import c_add" so we can only import add function
+ # in future we need to import files like this
+# from tokenizer import tokenize
+# from model import GPTModel
+# from dataset import load_dataset
