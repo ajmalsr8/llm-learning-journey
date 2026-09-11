@@ -9,7 +9,7 @@ with open("example.txt" ,"r") as file:
 """
 
 
-#when we use with Python automatically handles closing the file
+#when we use 'with' Python automatically handles closing the file
 """
 "r"	Read
 "w"	Write
