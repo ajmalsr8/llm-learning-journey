@@ -70,6 +70,18 @@ class Dataset_Manager:
         self.dataset.append(record)
         self.save_data()
         print("")
+    def view_records(self):
+        print("Data Set")
+        if not self.dataset:
+            print("Dataset is empty")
+            return
+        for record in self.dataset:
+            print(f"ID : {record["id"]}")
+            print(f"Question : {record["question"]}")
+            print(f"Answer : {record["answer"]}")
+            print(f"Category : {record["category"]}")
+            
+             
         
     
         
@@ -77,6 +89,7 @@ class Dataset_Manager:
 ob=Dataset_Manager()
 ob.Add_Data()
 # ob.load_data()
+ob.view_records()
 
         
         
