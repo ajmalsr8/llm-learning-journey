@@ -134,7 +134,7 @@ class Dataset_Manager:
             return
         
         try:
-            with open("CSV_File_EXP","w") as file:
+            with open("CSV_File_EXP","w",newline="",encoding="utf-8") as file:
                         fieldname = ["id","question","answer","category"]
                         writer= csv.DictWriter(file,fieldnames=fieldname)
                         writer.writeheader()
@@ -143,6 +143,85 @@ class Dataset_Manager:
                         
         except OSError :
             print("Error unable to export CSV file")
+    def import_csv(self):
+        if not os.path.exists:
+            print("No files found")
+            return
+        try:
+            with open("CSV_File_EXP","r",newline="",encoding="utf-8") as file:
+                reader = csv.DictReader(file)
+                imported_records = []
+                for row in reader:
+                    record = { "id": int(row["id"]),
+                            "question": row["question"],
+                            "answer":row["answer"],"category":row["category"]}
+                    
+                    imported_records.append(record)
+                self.dataset=imported_records
+                self.save_data
+                print("Imported successfully")
+        except OSError:
+            print("Error")
+            
+    def statitics(self):
+        print("Statictics")
+        if not self.dataset:
+            print("No records found")
+            return
+        total_records= len(self.dataset)
+        categories = {}
+        answers_length =[]
+        for record in self.dataset:
+            category=record["category"]
+            categories[category]=(categories.get(category,0))+1
+            answers_length.append(len(record["answer"]))
+        print(f"Total Records {total_records}")
+        
+        print("Categories")
+        for i,j in categories.items():
+            print(f"Category : {i} -- Count :{j}")
+        print("Average answer size")
+        ans_size= sum(answers_length)/len(answers_length)
+        print(f"Average answer size is {ans_size}")
+        
+        print(f"Longest Answer is {max(answers_length)} ")
+        print(f"Shortest Answer is {min(answers_length)} ")
+        
+        
+    def update_record(self):
+        print("Update Record")
+        
+        if not self.dataset:
+            print ("No records found")
+            return
+        try:
+            record_id=int(input("Enter the record id :"))
+        except ValueError:
+            print("Input should be a number")
+        new_question = input("Enter the question (Press enter to keep old) : ")
+        new_answer = input("Enter the answer (Press enter to keep old) : ")
+        new_category = input("Enter the category (Press enter to keep old) : ")
+        
+        
+        try:
+            for record in self.dataset:
+                if record_id == record["id"]:
+                    if new_question:
+                        record["question"] = new_question
+                    if new_answer:
+                        record["answer"] = new_answer
+                    if new_category:
+                        record["category"] = new_category
+            print("Record Updated Successfully")
+            self.save_data()
+            return
+        except OSError:
+            print("Error")
+                
+            
+                
+            
+            
             
             
                 
@@ -156,10 +235,13 @@ class Dataset_Manager:
 ob=Dataset_Manager()
 # ob.Add_Data()
 # ob.load_data()
-# ob.view_records()
+ob.view_records()
 # ob.search()
 # ob.delete()
-ob.exp_csv()
+# ob.exp_csv()
+# ob.import_csv()
+ob.statitics()
+ob.update_record()
 
 
         
