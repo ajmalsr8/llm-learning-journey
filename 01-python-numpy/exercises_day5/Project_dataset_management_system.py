@@ -18,7 +18,7 @@ class Dataset_Manager:
             self.dataset=[]
             return
         try:
-            with open(JSON_File,"r") as file:
+            with open(JSON_File,"r",encoding="uft-8") as file:
                         self.dataset=json.load(file)
                         print(self.dataset)
         except json.JSONDecodeError:
@@ -29,35 +29,25 @@ class Dataset_Manager:
             self.dataset=[]
     def save_data(self):
         try:
-            with open(JSON_File,"w")as file:
+            with open(JSON_File,"w",encoding="uft-8")as file:
                 json.dump(self.dataset,file)
         except OSError:
             print("Unable to save data")
             
     def Add_Data(self):
-        try:
-            question= input("Enter the question : ")
-            if not question:
-                print("Please enter a valid input")
-                return
-        except OSError:
-            print("Unable to add data")
-            return
-            
-            
-        try:
-            answer= input("Enter the answer : ")
-            if not answer:
-                 print("Please enter a valid input")
-                 return
-        except OSError:
-            print("Unable to add data")
-            return
-        try:
-            catergory= input("Enter the category : ")
-        except ValueError:
+        question= input("Enter the question : ")
+        if not question:
+            print("Please enter a valid input")
+            return     
+        answer= input("Enter the answer : ")
+        if not answer:
             print("Please enter a valid input")
             return
+        
+        catergory= input("Enter the category : ")
+        if not catergory:
+            catergory = "Uncategorized"
+            
         if self.dataset:
             new_id= max(record["id"] for record in self.dataset)+1
         else:
@@ -81,6 +71,7 @@ class Dataset_Manager:
             print(f"Question : {record["question"]}")
             print(f"Answer : {record["answer"]}")
             print(f"Category : {record["category"]}")
+            print("-"*20)
             
     def search(self):
         keyword=input("Enter the keyword to search :").strip().lower()
@@ -98,6 +89,9 @@ class Dataset_Manager:
                 flag = True
         if not flag:
             print("No data found")
+        key=input("Press any key to go back : ")
+        if key:
+            return
     
     def delete(self):
         print("\nDelete Record")
@@ -134,7 +128,7 @@ class Dataset_Manager:
             return
         
         try:
-            with open("CSV_File_EXP","w",newline="",encoding="utf-8") as file:
+            with open(CSV_File,"w",newline="",encoding="utf-8") as file:
                         fieldname = ["id","question","answer","category"]
                         writer= csv.DictWriter(file,fieldnames=fieldname)
                         writer.writeheader()
@@ -144,11 +138,11 @@ class Dataset_Manager:
         except OSError :
             print("Error unable to export CSV file")
     def import_csv(self):
-        if not os.path.exists:
+        if not os.path.exists(CSV_File):
             print("No files found")
             return
         try:
-            with open("CSV_File_EXP","r",newline="",encoding="utf-8") as file:
+            with open(CSV_File,"r",newline="",encoding="utf-8") as file:
                 reader = csv.DictReader(file)
                 imported_records = []
                 for row in reader:
@@ -158,13 +152,13 @@ class Dataset_Manager:
                     
                     imported_records.append(record)
                 self.dataset=imported_records
-                self.save_data
+                self.save_data()
                 print("Imported successfully")
         except OSError:
             print("Error")
             
-    def statitics(self):
-        print("Statictics")
+    def statistics(self):
+        print("Statistics")
         if not self.dataset:
             print("No records found")
             return
@@ -198,6 +192,7 @@ class Dataset_Manager:
             record_id=int(input("Enter the record id :"))
         except ValueError:
             print("Input should be a number")
+            return
         new_question = input("Enter the question (Press enter to keep old) : ")
         new_answer = input("Enter the answer (Press enter to keep old) : ")
         new_category = input("Enter the category (Press enter to keep old) : ")
@@ -222,7 +217,41 @@ class Dataset_Manager:
                 
             
             
-            
+    def main_menu(self):
+        while True:
+            print("*************************************************")
+            print("=== DATASET MANGEMENT ===")
+            print("Press 1 for View Records\nPress 2 for Load Data\nPress 3 for Add Data\nPress 4 for Search Data\nPress 5 for Delete Data\nPress 6 for Update Data\nPress 7 for Export to CSV File\nPress 8 for Import CSV File\nPress 9 for Statistics\nPress 10 for Exit\n")
+            print("*************************************************")
+            try:
+                choice= int(input("Enter the Input : "))
+            except ValueError:
+                print("Input should be a number")
+            if choice > 0 or choice<=10:
+                if choice==1:
+                    self.view_records()
+                elif choice==2:
+                    self.load_data()
+                elif choice==3:
+                    self.Add_Data()
+                elif choice==4:
+                    self.search()
+                elif choice ==5:
+                    self.delete()
+                elif choice ==6:
+                    self.update_record()
+                elif choice==7:
+                    self.exp_csv()
+                elif choice==8:
+                    self.import_csv()
+                elif choice == 9:
+                    self.statitics()
+                elif choice== 10:
+                    print("Exiting...........")
+                    return
+            else:
+                print("Input value should be 1-9")
+                          
             
                 
         
@@ -233,15 +262,7 @@ class Dataset_Manager:
         
         
 ob=Dataset_Manager()
-# ob.Add_Data()
-# ob.load_data()
-ob.view_records()
-# ob.search()
-# ob.delete()
-# ob.exp_csv()
-# ob.import_csv()
-ob.statitics()
-ob.update_record()
+ob.main_menu()
 
 
         
