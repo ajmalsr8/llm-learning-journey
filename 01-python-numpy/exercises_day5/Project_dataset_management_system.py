@@ -18,7 +18,7 @@ class Dataset_Manager:
             self.dataset=[]
             return
         try:
-            with open(JSON_File,"r",encoding="uft-8") as file:
+            with open(JSON_File,"r",encoding="utf-8") as file:
                         self.dataset=json.load(file)
                         print(self.dataset)
         except json.JSONDecodeError:
@@ -193,30 +193,31 @@ class Dataset_Manager:
         except ValueError:
             print("Input should be a number")
             return
-        new_question = input("Enter the question (Press enter to keep old) : ")
-        new_answer = input("Enter the answer (Press enter to keep old) : ")
-        new_category = input("Enter the category (Press enter to keep old) : ")
         
-        
-        try:
-            for record in self.dataset:
-                if record_id == record["id"]:
-                    if new_question:
-                        record["question"] = new_question
-                    if new_answer:
-                        record["answer"] = new_answer
-                    if new_category:
-                        record["category"] = new_category
-            print("Record Updated Successfully")
-            self.save_data()
+        target_record=None
+        for record in self.dataset:
+            if record["id"] == record_id:
+                target_record = record
+                break
+        if not target_record:
+            print("No record found")
             return
-        except OSError:
-            print("Error")
-                
-            
-                
-            
-            
+        
+        new_question = input("Enter the question (Press enter to keep old) : ").strip()
+        new_answer = input("Enter the answer (Press enter to keep old) : ").strip()
+        new_category = input("Enter the category (Press enter to keep old) : ").strip()
+        if new_question:
+            record["question"] = new_question
+        if new_answer:
+            record["answer"] = new_answer
+        if new_category:
+            record["category"] = new_category
+        
+        
+        self.save_data()
+        print("Record Updated Successfully")
+        
+          
     def main_menu(self):
         while True:
             print("*************************************************")
@@ -227,40 +228,33 @@ class Dataset_Manager:
                 choice= int(input("Enter the Input : "))
             except ValueError:
                 print("Input should be a number")
-            if choice > 0 or choice<=10:
-                if choice==1:
-                    self.view_records()
-                elif choice==2:
-                    self.load_data()
-                elif choice==3:
-                    self.Add_Data()
-                elif choice==4:
-                    self.search()
-                elif choice ==5:
-                    self.delete()
-                elif choice ==6:
-                    self.update_record()
-                elif choice==7:
-                    self.exp_csv()
-                elif choice==8:
-                    self.import_csv()
-                elif choice == 9:
-                    self.statitics()
-                elif choice== 10:
-                    print("Exiting...........")
-                    return
+                continue
+            
+            if choice==1:
+                self.view_records()
+            elif choice==2:
+                self.load_data()
+            elif choice==3:
+                self.Add_Data()
+            elif choice==4:
+                self.search()
+            elif choice ==5:
+                self.delete()
+            elif choice ==6:
+                self.update_record()
+            elif choice==7:
+                self.exp_csv()
+            elif choice==8:
+                self.import_csv()
+            elif choice == 9:
+                self.statistics()
+            elif choice== 10:
+                print("Exiting...........")
+                return
             else:
-                print("Input value should be 1-9")
+                print("Input value should be 1 and 10")
                           
-            
-                
-        
-            
-             
-        
-    
-        
-        
+       
 ob=Dataset_Manager()
 ob.main_menu()
 
